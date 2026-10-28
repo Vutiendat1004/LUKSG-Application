@@ -800,3 +800,13 @@ grant execute on function public.hom_nay(), public.cau_hinh_lay(text,text), publ
                           public.chuyen_chi_nhanh(text[],text,text,text)
       to authenticated;
 grant execute on all functions in schema public to service_role;
+
+-- Supabase tự cấp quyền gọi hàm cho người đăng nhập: thu lại ở các hàm nội bộ
+revoke execute on function public.kiem_tra_qua_han(), public.ap_dung_bac(bigint),
+  public.tg_nhap_hang_dong_don(), public.tg_thiet_bi_sau(), public.tg_sua_chua_xong(),
+  public.tg_thiet_bi_truoc(), public.tg_sua_chua_ngay_xong() from public, anon, authenticated;
+alter function public.hom_nay() set search_path = public;
+alter function public.chuan_hoa_ma(text[]) set search_path = public;
+alter function public.xu_ly_theo_bac(int) set search_path = public;
+alter function public.tg_thiet_bi_truoc() set search_path = public;
+alter function public.tg_sua_chua_ngay_xong() set search_path = public;
