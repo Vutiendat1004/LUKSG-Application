@@ -8,7 +8,7 @@ export function LoginForm({ tiep }: { tiep: string }) {
     <form action={action} className="stack">
       <input type="hidden" name="tiep" value={tiep} />
       <div className="field">
-        <label htmlFor="ten">Tên đăng nhập</label>
+        <label htmlFor="ten">Tên đăng nhập hoặc email</label>
         <input id="ten" name="ten" className="input" autoComplete="username" autoCapitalize="none" autoCorrect="off" required />
       </div>
       <div className="field">
