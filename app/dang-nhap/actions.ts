@@ -24,9 +24,6 @@ export async function dangNhap(_prev: { loi: string }, form: FormData): Promise<
   const mk = String(form.get('mk') ?? '')
   const tiep = String(form.get('tiep') ?? '/')
   if (!ten || !mk) return { loi: 'Nhập tên đăng nhập và mật khẩu.' }
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { loi: 'App chưa được nối với Supabase (thiếu khoá trên Vercel).' }
-  }
   const supabase = await supabaseServer()
   const { error } = await supabase.auth.signInWithPassword({ email: await timEmail(ten), password: mk })
   if (error) {

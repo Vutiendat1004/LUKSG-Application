@@ -1,3 +1,5 @@
+import { appUrl } from './supabase/config'
+
 /** Gửi email qua Resend. Thiếu RESEND_API_KEY thì bỏ qua (ghi log) để app vẫn chạy khi thử. */
 export async function guiEmail(opts: {
   to: (string | null | undefined)[]
@@ -52,7 +54,7 @@ export function bang(cot: string[], dong: (string | number | null | undefined)[]
 }
 
 export function khung(tieuDe: string, noiDung: string): string {
-  const app = process.env.NEXT_PUBLIC_APP_URL || ''
+  const app = appUrl()
   return `<div style="font-family:Afacad,Segoe UI,Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;color:#18211f;line-height:1.5">
 <h2 style="font-size:20px;margin:0 0 12px">${esc(tieuDe)}</h2>
 ${noiDung}

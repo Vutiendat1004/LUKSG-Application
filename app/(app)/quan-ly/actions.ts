@@ -210,6 +210,8 @@ export async function luuCauHinh(f: FormData) {
 
 // ---------------- Nhân viên (dùng quyền quản trị) ----------------
 
+const CAN_KHOA = 'Để tạo tài khoản và đặt lại mật khẩu, cần khai báo khoá SUPABASE_SERVICE_ROLE_KEY trên Vercel (Settings → Environments → Production → Environment Variables), rồi Redeploy.'
+
 function nhomTuForm(f: FormData) {
   return ['inn', 'media'].filter((g) => f.get(`nhom_${g}`) === 'on')
 }
@@ -221,7 +223,8 @@ export async function taoNhanVien(f: FormData) {
   if (!hopLeTenDangNhap(ten)) ve('/quan-ly/nhan-vien', undefined, 'Tên đăng nhập 2–32 ký tự, chỉ chữ thường không dấu, số, dấu chấm, gạch.')
   if (mk.length < 6) ve('/quan-ly/nhan-vien', undefined, 'Mật khẩu ít nhất 6 ký tự.')
   if (!s(f, 'ho_ten')) ve('/quan-ly/nhan-vien', undefined, 'Cần có họ tên.')
-  const admin = supabaseAdmin()
+  let admin
+  try { admin = supabaseAdmin() } catch { ve('/quan-ly/nhan-vien', undefined, CAN_KHOA) }
   const { data, error } = await admin.auth.admin.createUser({ email: emailDangNhap(ten), password: mk, email_confirm: true })
   if (error || !data.user) ve('/quan-ly/nhan-vien', undefined, error?.message.includes('already') ? 'Tên đăng nhập đã có.' : error?.message ?? 'Lỗi tạo tài khoản')
   const { error: e2 } = await admin.from('nhan_vien').insert({
@@ -262,7 +265,8 @@ export async function datLaiMatKhau(f: FormData) {
   await canQuanLy()
   const mk = String(f.get('mat_khau') ?? '')
   if (mk.length < 6) ve('/quan-ly/nhan-vien', undefined, 'Mật khẩu ít nhất 6 ký tự.')
-  const admin = supabaseAdmin()
+  let admin
+  try { admin = supabaseAdmin() } catch { ve('/quan-ly/nhan-vien', undefined, CAN_KHOA) }
   const { error } = await admin.auth.admin.updateUserById(s(f, 'id'), { password: mk })
   if (error) ve('/quan-ly/nhan-vien', undefined, error.message)
   ve('/quan-ly/nhan-vien', 'Đã đặt lại mật khẩu.')

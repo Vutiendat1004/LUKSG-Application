@@ -4,6 +4,7 @@ import { canQuanLy } from '@/lib/auth'
 import { supabaseServer } from '@/lib/supabase/server'
 import { MUC, MUC_KEYS } from '@/lib/muc'
 import { InNut } from './InNut'
+import { appUrl } from '@/lib/supabase/config'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,7 +15,7 @@ async function svg(text: string) {
 export default async function InQR({ searchParams }: { searchParams: Promise<{ loai?: string; goc?: string }> }) {
   await canQuanLy()
   const sp = await searchParams
-  const app = (process.env.NEXT_PUBLIC_APP_URL || '').replace(/\/$/, '')
+  const app = appUrl()
   const kho = sp.loai === 'kho'
   const sb = await supabaseServer()
 
@@ -45,7 +46,7 @@ export default async function InQR({ searchParams }: { searchParams: Promise<{ l
       <div className="no-print">
         <Link href="/quan-ly" className="back">‹ Bảng quản lý</Link>
         <h1>In mã QR</h1>
-        {!app && <div className="alert warn" style={{ marginTop: 12 }}>Chưa khai báo NEXT_PUBLIC_APP_URL trên Vercel nên mã QR chưa có link đúng.</div>}
+        {!app && <div className="alert warn" style={{ marginTop: 12 }}>Chưa xác định được link app nên mã QR chưa có link đúng. Khai báo NEXT_PUBLIC_APP_URL trên Vercel.</div>}
         <div className="filters" style={{ margin: '16px 0' }}>
           <Link href="/quan-ly/in-qr" className={!kho ? 'on' : ''}>QR dán thiết bị</Link>
           <Link href="/quan-ly/in-qr?loai=kho" className={kho ? 'on' : ''}>QR dán kho & office</Link>
